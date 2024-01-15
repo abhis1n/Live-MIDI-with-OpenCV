@@ -58,12 +58,6 @@ paintWindow = cv2.rectangle(paintWindow, (390,1), (485,65), colors[2], -1)
 paintWindow = cv2.rectangle(paintWindow, (505,1), (600,65), colors[3], -1)
 
 
-# cl c
-# bl d
-# gr e
-# red f
-# y g
-
 cv2.putText(paintWindow, "C", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2, cv2.LINE_AA)
 cv2.putText(paintWindow, "D", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
 cv2.putText(paintWindow, "E", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
@@ -74,7 +68,6 @@ cv2.namedWindow('Paint', cv2.WINDOW_AUTOSIZE)
 
 # Loading the default webcam of PC.
 cap = cv2.VideoCapture(0)
-hasPlayed = 0
 d = deque([48])
 
 # Keep looping
@@ -157,7 +150,7 @@ while True:
 
                 if(len(d)==0):
                     t.join()
-                    d.append(61)
+                    d.append(81)
 
                 blue_index = 0
                 green_index = 0
@@ -169,22 +162,22 @@ while True:
                     colorIndex = 0 # Blue
                     if(len(d)==0):
                         t.join()
-                        d.append(62)
+                        d.append(71)
             elif 275 <= center[0] <= 370:
                     colorIndex = 1 # Green
                     if(len(d)==0):
                         t.join()
-                        d.append(63)
+                        d.append(61)
             elif 390 <= center[0] <= 485:
                     colorIndex = 2 # Red
                     if(len(d)==0):
                         t.join()
-                        d.append(64)
+                        d.append(51)
             elif 505 <= center[0] <= 600:
                     colorIndex = 3 # Yellow
                     if(len(d)==0):
                         t.join()
-                        d.append(68)
+                        d.append(69)
         else :
             # if colorIndex == 0:
             #     bpoints[blue_index].appendleft(center)
