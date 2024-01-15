@@ -8,12 +8,11 @@ import rtmidi
 midiout = rtmidi.MidiOut()
 midiout.open_port(1)
 
-#default called trackbar function
 def setValues(x):
    print("")
 
 def playnote(note=60):
-    note_on = [0x90, note, 112] # channel 1, middle C, velocity 112
+    note_on = [0x90, note, 112] 
     note_off = [0x80, note, 0]
     midiout.send_message(note_on)
     time.sleep(0.1)
@@ -21,7 +20,6 @@ def playnote(note=60):
     time.sleep(0.1)
 
 
-# Creating the trackbars needed for adjusting the marker colour
 cv2.namedWindow("Color detectors")
 cv2.createTrackbar("Upper Hue", "Color detectors", 69, 180,setValues)
 cv2.createTrackbar("Upper Saturation", "Color detectors", 163, 255,setValues)
