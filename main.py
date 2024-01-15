@@ -6,14 +6,13 @@ import time
 import rtmidi
 
 midiout = rtmidi.MidiOut()
-midiout.open_port(1)
+midiout.open_port(0)
 
-#default called trackbar function
 def setValues(x):
    print("")
 
 def playnote(note=60):
-    note_on = [0x90, note, 112] # channel 1, middle C, velocity 112
+    note_on = [0x90, note, 112] 
     note_off = [0x80, note, 0]
     midiout.send_message(note_on)
     time.sleep(0.1)
@@ -21,7 +20,6 @@ def playnote(note=60):
     time.sleep(0.1)
 
 
-# Creating the trackbars needed for adjusting the marker colour
 cv2.namedWindow("Color detectors")
 cv2.createTrackbar("Upper Hue", "Color detectors", 69, 180,setValues)
 cv2.createTrackbar("Upper Saturation", "Color detectors", 163, 255,setValues)
@@ -72,13 +70,7 @@ d = deque([48])
 
 # Keep looping
 while True:
-    # try:
-    #     # playnote(d.popleft())
-    #     t = threading.Thread(target=playnote, args=(d.popleft(),))
-    #     t.start()
-    # except:
-    #     t.join()
-
+ 
     if(len(d)!=0):
         t = threading.Thread(target=playnote, args=(d.popleft(),))
         t.start()
@@ -111,11 +103,11 @@ while True:
     # cv2.putText(frame, "GREEN", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
     # cv2.putText(frame, "RED", (420, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
     # cv2.putText(frame, "YELLOW", (520, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
-    cv2.putText(frame, "C", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "D", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "E", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "F", (420, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "G", (520, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
+    cv2.putText(frame, "arc 1", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "arc 2", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "arc 3", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "arc 4", (420, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "arc 5", (520, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
 
     # Identifying the pointer by making its mask
     Mask = cv2.inRange(hsv, Lower_hsv, Upper_hsv)
