@@ -20,7 +20,6 @@ def playnote(note=60):
     time.sleep(0.1)
 
 
-# Creating the trackbars needed for adjusting the marker colour
 cv2.namedWindow("Color detectors")
 cv2.createTrackbar("Upper Hue", "Color detectors", 69, 180,setValues)
 cv2.createTrackbar("Upper Saturation", "Color detectors", 163, 255,setValues)
