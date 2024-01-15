@@ -8,12 +8,11 @@ import rtmidi
 midiout = rtmidi.MidiOut()
 midiout.open_port(1)
 
-#default called trackbar function
 def setValues(x):
    print("")
 
 def playnote(note=60):
-    note_on = [0x90, note, 112] # channel 1, middle C, velocity 112
+    note_on = [0x90, note, 112] 
     note_off = [0x80, note, 0]
     midiout.send_message(note_on)
     time.sleep(0.1)
