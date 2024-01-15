@@ -79,13 +79,7 @@ d = deque([48])
 
 # Keep looping
 while True:
-    # try:
-    #     # playnote(d.popleft())
-    #     t = threading.Thread(target=playnote, args=(d.popleft(),))
-    #     t.start()
-    # except:
-    #     t.join()
-
+ 
     if(len(d)!=0):
         t = threading.Thread(target=playnote, args=(d.popleft(),))
         t.start()
