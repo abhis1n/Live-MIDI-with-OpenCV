@@ -46,12 +46,6 @@ track = 80
 
 # Keep looping
 while True:
-    # try:
-    #     # playnote(d.popleft())
-    #     t = threading.Thread(target=playnote, args=(d.popleft(),))
-    #     t.start()
-    # except:
-    #     t.join()
 
     if(len(d)!=0):
         t = threading.Thread(target=playnote, args=(d.popleft(),))
@@ -112,71 +106,33 @@ while True:
         # Now checking if the user wants to click on any button above the screen
         if center[1] <= 65:
             if 40 <= center[0] <= 140: # Clear Button
-                bpoints = [deque(maxlen=512)]
-                gpoints = [deque(maxlen=512)]
-                rpoints = [deque(maxlen=512)]
-                ypoints = [deque(maxlen=512)]
 
                 if(len(d)==0):
                     t.join()
-                    d.append(81)
+                    d.append(track+1)
 
-                blue_index = 0
-                green_index = 0
-                red_index = 0
-                yellow_index = 0
-
-                paintWindow[67:,:,:] = 255
             elif 160 <= center[0] <= 255:
                     colorIndex = 0 # Blue
                     if(len(d)==0):
                         t.join()
-                        d.append(71)
+                        d.append(track+2)
             elif 275 <= center[0] <= 370:
                     colorIndex = 1 # Green
                     if(len(d)==0):
                         t.join()
-                        d.append(61)
+                        d.append(track+3)
             elif 390 <= center[0] <= 485:
-                    colorIndex = 2 # Red
-                    if(len(d)==0):
-                        t.join()
-                        d.append(51)
-            elif 505 <= center[0] <= 600:
-                    colorIndex = 3 # Yellow
-                    if(len(d)==0):
-                        t.join()
-                        d.append(69)
-        else :
-            # if colorIndex == 0:
-            #     bpoints[blue_index].appendleft(center)
-            # elif colorIndex == 1:
-            #     gpoints[green_index].appendleft(center)
-            # elif colorIndex == 2:
-            #     rpoints[red_index].appendleft(center)
-            # elif colorIndex == 3:
-            #     ypoints[yellow_index].appendleft(center)
-            pass
-    # Append the next deques when nothing is detected to avois messing up
-    else:
-        bpoints.append(deque(maxlen=512))
-        blue_index += 1
-        gpoints.append(deque(maxlen=512))
-        green_index += 1
-        rpoints.append(deque(maxlen=512))
-        red_index += 1
-        ypoints.append(deque(maxlen=512))
-        yellow_index += 1
 
-    # Draw lines of all the colors on the canvas and frame
-    points = [bpoints, gpoints, rpoints, ypoints]
-    for i in range(len(points)):
-        for j in range(len(points[i])):
-            for k in range(1, len(points[i][j])):
-                if points[i][j][k - 1] is None or points[i][j][k] is None:
-                    continue
-                cv2.line(frame, points[i][j][k - 1], points[i][j][k], colors[i], 2)
-                cv2.line(paintWindow, points[i][j][k - 1], points[i][j][k], colors[i], 2)
+                    if(len(d)==0):
+                        t.join()
+                        d.append(track+4)
+            elif 505 <= center[0] <= 600:
+
+                    if(len(d)==0):
+                        t.join()
+                        d.append(track+9)
+
+
 
     # Show all the windows
     cv2.imshow("Tracking", frame)
@@ -184,8 +140,7 @@ while True:
 
 	# If the 'q' key is pressed then stop the application
     if cv2.waitKey(1) & 0xFF == ord("q"):
-
-     break
+        break
 
 # Release the camera and all resources
 cap.release()
