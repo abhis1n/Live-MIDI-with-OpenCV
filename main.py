@@ -39,7 +39,6 @@ colorIndex = 0
 
 # Loading the default webcam of PC.
 cap = cv2.VideoCapture(0)
-hasPlayed = 0
 d = deque([48])
 
 # Keep looping
