@@ -6,7 +6,7 @@ import time
 import rtmidi
 
 midiout = rtmidi.MidiOut()
-midiout.open_port(1)
+midiout.open_port(0)
 
 #default called trackbar function
 def setValues(x):
@@ -30,54 +30,21 @@ cv2.createTrackbar("Lower Hue", "Color detectors", 20, 180,setValues)
 cv2.createTrackbar("Lower Saturation", "Color detectors", 59, 255,setValues)
 cv2.createTrackbar("Lower Value", "Color detectors", 194, 255,setValues)
 
-
-# Giving different arrays to handle colour points of different colour
-bpoints = [deque(maxlen=1024)]
-gpoints = [deque(maxlen=1024)]
-rpoints = [deque(maxlen=1024)]
-ypoints = [deque(maxlen=1024)]
-
-# These indexes will be used to mark the points in particular arrays of specific colour
-blue_index = 0
-green_index = 0
-red_index = 0
-yellow_index = 0
-
 #The kernel to be used for dilation purpose
 kernel = np.ones((5,5),np.uint8)
 
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
 colorIndex = 0
 
-# Here is code for Canvas setup
-paintWindow = np.zeros((471,636,3)) + 255
-paintWindow = cv2.rectangle(paintWindow, (40,1), (140,65), (0,0,0), 2)
-paintWindow = cv2.rectangle(paintWindow, (160,1), (255,65), colors[0], -1)
-paintWindow = cv2.rectangle(paintWindow, (275,1), (370,65), colors[1], -1)
-paintWindow = cv2.rectangle(paintWindow, (390,1), (485,65), colors[2], -1)
-paintWindow = cv2.rectangle(paintWindow, (505,1), (600,65), colors[3], -1)
-
-
-cv2.putText(paintWindow, "C", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "D", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "E", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "F", (420, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "G", (520, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
-cv2.namedWindow('Paint', cv2.WINDOW_AUTOSIZE)
-
 
 # Loading the default webcam of PC.
 cap = cv2.VideoCapture(0)
+hasPlayed = 0
 d = deque([48])
 
 # Keep looping
 while True:
-    # try:
-    #     # playnote(d.popleft())
-    #     t = threading.Thread(target=playnote, args=(d.popleft(),))
-    #     t.start()
-    # except:
-    #     t.join()
+ 
 
     if(len(d)!=0):
         t = threading.Thread(target=playnote, args=(d.popleft(),))
@@ -106,11 +73,6 @@ while True:
     frame = cv2.rectangle(frame, (275,1), (370,65), colors[1], -1)
     frame = cv2.rectangle(frame, (390,1), (485,65), colors[2], -1)
     frame = cv2.rectangle(frame, (505,1), (600,65), colors[3], -1)
-    # cv2.putText(frame, "CLEAR ALL", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    # cv2.putText(frame, "BLUE", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    # cv2.putText(frame, "GREEN", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    # cv2.putText(frame, "RED", (420, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    # cv2.putText(frame, "YELLOW", (520, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
     cv2.putText(frame, "C", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
     cv2.putText(frame, "D", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
     cv2.putText(frame, "E", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
@@ -128,7 +90,7 @@ while True:
     	cv2.CHAIN_APPROX_SIMPLE)
     center = None
 
-    # Ifthe contours are formed
+    # If the contours are formed
     if len(cnts) > 0:
     	# sorting the contours to find biggest
         cnt = sorted(cnts, key = cv2.contourArea, reverse = True)[0]
@@ -143,80 +105,42 @@ while True:
         # Now checking if the user wants to click on any button above the screen
         if center[1] <= 65:
             if 40 <= center[0] <= 140: # Clear Button
-                bpoints = [deque(maxlen=512)]
-                gpoints = [deque(maxlen=512)]
-                rpoints = [deque(maxlen=512)]
-                ypoints = [deque(maxlen=512)]
-
+                
                 if(len(d)==0):
                     t.join()
-                    d.append(81)
+                    d.append(61)
 
-                blue_index = 0
-                green_index = 0
-                red_index = 0
-                yellow_index = 0
 
-                paintWindow[67:,:,:] = 255
             elif 160 <= center[0] <= 255:
-                    colorIndex = 0 # Blue
+                    
                     if(len(d)==0):
                         t.join()
-                        d.append(71)
+                        d.append(62)
             elif 275 <= center[0] <= 370:
-                    colorIndex = 1 # Green
+                    
                     if(len(d)==0):
                         t.join()
-                        d.append(61)
+                        d.append(63)
             elif 390 <= center[0] <= 485:
-                    colorIndex = 2 # Red
+                    
                     if(len(d)==0):
                         t.join()
-                        d.append(51)
+                        d.append(64)
             elif 505 <= center[0] <= 600:
-                    colorIndex = 3 # Yellow
+                    
                     if(len(d)==0):
                         t.join()
-                        d.append(69)
-        else :
-            # if colorIndex == 0:
-            #     bpoints[blue_index].appendleft(center)
-            # elif colorIndex == 1:
-            #     gpoints[green_index].appendleft(center)
-            # elif colorIndex == 2:
-            #     rpoints[red_index].appendleft(center)
-            # elif colorIndex == 3:
-            #     ypoints[yellow_index].appendleft(center)
-            pass
-    # Append the next deques when nothing is detected to avois messing up
-    else:
-        bpoints.append(deque(maxlen=512))
-        blue_index += 1
-        gpoints.append(deque(maxlen=512))
-        green_index += 1
-        rpoints.append(deque(maxlen=512))
-        red_index += 1
-        ypoints.append(deque(maxlen=512))
-        yellow_index += 1
-
-    # Draw lines of all the colors on the canvas and frame
-    points = [bpoints, gpoints, rpoints, ypoints]
-    for i in range(len(points)):
-        for j in range(len(points[i])):
-            for k in range(1, len(points[i][j])):
-                if points[i][j][k - 1] is None or points[i][j][k] is None:
-                    continue
-                cv2.line(frame, points[i][j][k - 1], points[i][j][k], colors[i], 2)
-                cv2.line(paintWindow, points[i][j][k - 1], points[i][j][k], colors[i], 2)
+                        d.append(68)
+       
 
     # Show all the windows
     cv2.imshow("Tracking", frame)
-    cv2.imshow("Paint", paintWindow)
     cv2.imshow("mask",Mask)
 
 	# If the 'q' key is pressed then stop the application
     if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+    
+     break
 
 # Release the camera and all resources
 cap.release()
