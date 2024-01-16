@@ -110,14 +110,15 @@ while True:
                     t.join()
                     d.append(61)
 
+              
 
             elif 160 <= center[0] <= 255:
-                    
+                    colorIndex = 0 # Blue
                     if(len(d)==0):
                         t.join()
                         d.append(62)
             elif 275 <= center[0] <= 370:
-                    
+                    colorIndex = 1 # Green
                     if(len(d)==0):
                         t.join()
                         d.append(63)
@@ -132,6 +133,7 @@ while True:
                         t.join()
                         d.append(68)
        
+          
 
     # Show all the windows
     cv2.imshow("Tracking", frame)
