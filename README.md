@@ -1,14 +1,19 @@
 # Live MIDI with OpenCV
+## Index:
+- Introduction
+- System Requirements
+- How the program operates
+- Understanding the code
 ## Introduction
 Live MIDI is a python script which integrates computer vision with some raw musical talent to create a magic like effect where an artist can play and mix various 
 instruments *(drum,synth,bass)* **Live** with a mere swing of his hand. It can be used to send MIDI data to different DAWs and other softwares. The program works fully on python and uses an additional JSON file to store various objects' data.
 ## System Requirements:
-- rtmidi module
+- [rtmidi module](https://pypi.org/project/python-rtmidi/)
 - FL studio or any other DAW
-- loopMidi software
+- [loopMidi software](https://www.tobias-erichsen.de/software/loopmidi.html)
 ## How the program operates:
 The program creates 5X5 virtual tiles on the top and left edges of the live webcam footage screen. 
-Trackbars are used to mask and focus down an object(visible to the program through camera),
+Trackbars are used to mask and focus down an object (visible to the program through camera),
 which have already been configured and stored for several objects.
 The user uses the object to touch any of the 10 rectangular regions to initiate or add onto a track.
 
