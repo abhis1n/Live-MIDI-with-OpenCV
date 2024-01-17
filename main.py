@@ -8,7 +8,7 @@ import rtmidi
 midiout = rtmidi.MidiOut()
 
 # Port 1 for loopMIDI
-midiout.open_port(0)
+midiout.open_port(1)
 
 #default called trackbar function
 def setValues(x):
