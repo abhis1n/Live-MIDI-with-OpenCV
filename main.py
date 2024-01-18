@@ -4,6 +4,11 @@ from collections import deque
 import threading
 import time
 import rtmidi
+import json
+
+f = open('object.json')
+data = json.load(f)
+obj = data["highlighter"]
 
 midiout = rtmidi.MidiOut()
 
@@ -25,17 +30,17 @@ def playnote(note=60):
 
 # Creating the trackbars needed for adjusting the marker colour
 cv2.namedWindow("Color detectors")
-cv2.createTrackbar("Upper Hue", "Color detectors", 69, 180,setValues)
-cv2.createTrackbar("Upper Saturation", "Color detectors", 163, 255,setValues)
-cv2.createTrackbar("Upper Value", "Color detectors", 255, 255,setValues)
-cv2.createTrackbar("Lower Hue", "Color detectors", 20, 180,setValues)
-cv2.createTrackbar("Lower Saturation", "Color detectors", 59, 255,setValues)
-cv2.createTrackbar("Lower Value", "Color detectors", 194, 255,setValues)
+cv2.createTrackbar("Upper Hue", "Color detectors", obj[0], 180,setValues)
+cv2.createTrackbar("Upper Saturation", "Color detectors", obj[1], 255,setValues)
+cv2.createTrackbar("Upper Value", "Color detectors", obj[2], 255,setValues)
+cv2.createTrackbar("Lower Hue", "Color detectors", obj[3], 180,setValues)
+cv2.createTrackbar("Lower Saturation", "Color detectors", obj[4], 255,setValues)
+cv2.createTrackbar("Lower Value", "Color detectors", obj[5], 255,setValues)
 
 #The kernel to be used for dilation purpose
 kernel = np.ones((5,5),np.uint8)
 
-colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
+# colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
 grey = (122,122,122)
 green = (0, 255, 0)
 
@@ -100,7 +105,7 @@ while True:
     cv2.putText(frame, "Pat.2", (190, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "Pat.3", (290, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "Pat.4", (380, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-    cv2.putText(frame, "Pat.5", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "MUTE", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
     cv2.putText(frame, "TRACK 1", (8, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "TRACK 2", (8, 210), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
@@ -191,7 +196,7 @@ while True:
                     pat1=grey
                     pat4=grey
                     pat5=grey
-            elif 460 <= center[0] <= 540:
+            elif 365 <= center[0] <= 445:
 
                 if(len(d)==0):
                     t.join()
@@ -201,11 +206,11 @@ while True:
                     pat3=grey
                     pat1=grey
                     pat5=grey
-            elif 505 <= center[0] <= 600:
+            elif 460 <= center[0] <= 540:
                 if(len(d)==0):
                     t.join()
                     d.append(track+9)
-                    pat5=green
+                    pat5=(0,0,255)
                     pat2=grey
                     pat3=grey
                     pat4=grey
