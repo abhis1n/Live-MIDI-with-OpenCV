@@ -36,8 +36,20 @@ cv2.createTrackbar("Lower Value", "Color detectors", 194, 255,setValues)
 kernel = np.ones((5,5),np.uint8)
 
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
-colorIndex = 0
+grey = (122,122,122)
+green = (0, 255, 0)
 
+pat1 = grey
+pat2 = grey
+pat3 = grey
+pat4 = grey
+pat5 = grey
+
+
+track1 = grey
+track2 = grey
+track3 = grey
+track4 = grey
 
 # Loading the default webcam of PC.
 cap = cv2.VideoCapture(0)
@@ -69,16 +81,18 @@ while True:
 
 
     # Adding the colour buttons to the live frame for colour access
-    frame = cv2.rectangle(frame, (80,1), (160,80), (122,122,122), -1)
-    frame = cv2.rectangle(frame, (175,1), (255,80), colors[0], -1)
-    frame = cv2.rectangle(frame, (270,1), (350,80), colors[1], -1)
-    frame = cv2.rectangle(frame, (365,1), (445,80), colors[2], -1)
-    frame = cv2.rectangle(frame, (460,1), (540,80), colors[3], -1)
+    # Patterns
+    frame = cv2.rectangle(frame, (80,1), (160,80), pat1, -1)
+    frame = cv2.rectangle(frame, (175,1), (255,80), pat2, -1)
+    frame = cv2.rectangle(frame, (270,1), (350,80), pat3, -1)
+    frame = cv2.rectangle(frame, (365,1), (445,80), pat4, -1)
+    frame = cv2.rectangle(frame, (460,1), (540,80), pat5, -1)
 
-    frame = cv2.rectangle(frame, (1,80), (80,160), colors[3], -1)
-    frame = cv2.rectangle(frame, (1,175), (80,255), colors[2], -1)
-    frame = cv2.rectangle(frame, (1,270), (80,350), colors[1], -1)
-    frame = cv2.rectangle(frame, (1,365), (80,445), colors[0], -1)
+    # Tracks
+    frame = cv2.rectangle(frame, (1,80), (80,160), track1, -1)
+    frame = cv2.rectangle(frame, (1,175), (80,255), track2, -1)
+    frame = cv2.rectangle(frame, (1,270), (80,350), track3, -1)
+    frame = cv2.rectangle(frame, (1,365), (80,445), track4, -1)
 
 
 
@@ -86,9 +100,9 @@ while True:
     cv2.putText(frame, "Pat.2", (190, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "Pat.3", (290, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "Pat.4", (380, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-    cv2.putText(frame, "Pat.5", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 1, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.5", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
-    cv2.putText(frame, "TRACK 1", (8, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+    cv2.putText(frame, "TRACK 1", (8, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "TRACK 2", (8, 210), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "TRACK 3", (8, 305), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "TRACK 4", (8, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
@@ -116,47 +130,86 @@ while True:
         center = (int(M['m10'] / M['m00']), int(M['m01'] / M['m00']))
 
         # Now checking if the user wants to click on any button above the screen
+        # Tracks
         if center[0] <= 80:
             if 80 <= center[1] <= 160:
                 track=80
+                track1 = green
+                track2 = grey
+                track3 = grey
+                track4 = grey
 
             elif 175 <= center[1] <= 255:
                 track=70
+                track2 = green
+                track1 = grey
+                track3 = grey
+                track4 = grey
 
             elif 270 <= center[1] <= 350:
                 track=60
+                track3 = green
+                track2 = grey
+                track1 = grey
+                track4 = grey
 
             elif 365 <= center[1] <= 445:
                 track=50
+                track4 = green
+                track2 = grey
+                track3 = grey
+                track1 = grey
 
         if center[1] <= 80:
 
-            if 80 <= center[0] <= 160: # Clear Button
-
+            if 80 <= center[0] <= 160:
                 if(len(d)==0):
                     t.join()
                     d.append(track+1)
+                    pat1=green
+                    pat2=grey
+                    pat3=grey
+                    pat4=grey
+                    pat5=grey
+
 
             elif 175 <= center[0] <= 255:
-                    colorIndex = 0 # Blue
-                    if(len(d)==0):
-                        t.join()
-                        d.append(track+2)
+                if(len(d)==0):
+                    t.join()
+                    d.append(track+2)
+                    pat2=green
+                    pat1=grey
+                    pat3=grey
+                    pat4=grey
+                    pat5=grey
             elif 270 <= center[0] <= 350:
-                    colorIndex = 1 # Green
-                    if(len(d)==0):
-                        t.join()
-                        d.append(track+3)
+                if(len(d)==0):
+                    t.join()
+                    d.append(track+3)
+                    pat3=green
+                    pat2=grey
+                    pat1=grey
+                    pat4=grey
+                    pat5=grey
             elif 460 <= center[0] <= 540:
 
-                    if(len(d)==0):
-                        t.join()
-                        d.append(track+4)
+                if(len(d)==0):
+                    t.join()
+                    d.append(track+4)
+                    pat4=green
+                    pat2=grey
+                    pat3=grey
+                    pat1=grey
+                    pat5=grey
             elif 505 <= center[0] <= 600:
-
-                    if(len(d)==0):
-                        t.join()
-                        d.append(track+9)
+                if(len(d)==0):
+                    t.join()
+                    d.append(track+9)
+                    pat5=green
+                    pat2=grey
+                    pat3=grey
+                    pat4=grey
+                    pat1=grey
 
 
     # Show all the windows
