@@ -38,16 +38,7 @@ kernel = np.ones((5,5),np.uint8)
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
 colorIndex = 0
 
-#Resizing the frame
 
-def rescaleframe(frame,scale=2):
-        width = int(frame.shape[1] + scale)
-        height = int(frame.shape[0] + scale)
-
-        dimensions = (width,height)
-
-        return cv2.resize(frame , dimensions , interpolation=cv2.INTER_AREA)
-        
 # Loading the default webcam of PC.
 cap = cv2.VideoCapture(0)
 d = deque([48])
@@ -92,16 +83,16 @@ while True:
 
 
     cv2.putText(frame, "Pat.1", (96, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-    cv2.putText(frame, "Pat.2", (190, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "Pat.3", (290, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "Pat.4", (380, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "Pat.5", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
-    
-    cv2.putText(frame, "TRACK 1", (8, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2, cv2.LINE_AA)
-    cv2.putText(frame, "TRACK 2", (8, 210), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "TRACK 3", (8, 305), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "TRACK 4", (8, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    
+    cv2.putText(frame, "Pat.2", (190, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.3", (290, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.4", (380, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.5", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 1, cv2.LINE_AA)
+
+    cv2.putText(frame, "TRACK 1", (8, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+    cv2.putText(frame, "TRACK 2", (8, 210), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "TRACK 3", (8, 305), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "TRACK 4", (8, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+
     # Identifying the pointer by making its mask
     Mask = cv2.inRange(hsv, Lower_hsv, Upper_hsv)
     Mask = cv2.erode(Mask, kernel, iterations=1)
@@ -126,16 +117,16 @@ while True:
 
         # Now checking if the user wants to click on any button above the screen
         if center[0] <= 80:
-            if 80 <= center[0] <= 160:
+            if 80 <= center[1] <= 160:
                 track=80
 
-            elif 175 <= center[0] <= 255:
+            elif 175 <= center[1] <= 255:
                 track=70
 
-            elif 270 <= center[0] <= 350:
+            elif 270 <= center[1] <= 350:
                 track=60
 
-            elif 365 <= center[0] <= 445:
+            elif 365 <= center[1] <= 445:
                 track=50
 
         if center[1] <= 80:
@@ -166,16 +157,13 @@ while True:
                     if(len(d)==0):
                         t.join()
                         d.append(track+9)
-#RESIZE
-    frame_rs=rescaleframe(frame)
 
 
     # Show all the windows
     cv2.imshow("Tracking", frame)
-    cv2.imshow("resize",frame_rs)
     cv2.imshow("mask",Mask)
 
-    
+
 
 	# If the 'q' key is pressed then stop the application
     if cv2.waitKey(1) & 0xFF == ord("q"):
@@ -184,4 +172,3 @@ while True:
 # Release the camera and all resources
 cap.release()
 cv2.destroyAllWindows()
-
