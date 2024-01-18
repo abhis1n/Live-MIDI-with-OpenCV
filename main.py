@@ -38,7 +38,16 @@ kernel = np.ones((5,5),np.uint8)
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
 colorIndex = 0
 
+#Resizing the frame
 
+def rescaleframe(frame,scale=2):
+        width = int(frame.shape[1] + scale)
+        height = int(frame.shape[0] + scale)
+
+        dimensions = (width,height)
+
+        return cv2.resize(frame , dimensions , interpolation=cv2.INTER_AREA)
+        
 # Loading the default webcam of PC.
 cap = cv2.VideoCapture(0)
 d = deque([48])
@@ -69,17 +78,30 @@ while True:
 
 
     # Adding the colour buttons to the live frame for colour access
-    frame = cv2.rectangle(frame, (40,1), (140,65), (122,122,122), -1)
-    frame = cv2.rectangle(frame, (160,1), (255,65), colors[0], -1)
-    frame = cv2.rectangle(frame, (275,1), (370,65), colors[1], -1)
-    frame = cv2.rectangle(frame, (390,1), (485,65), colors[2], -1)
-    frame = cv2.rectangle(frame, (505,1), (600,65), colors[3], -1)
-    cv2.putText(frame, "C", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "D", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "E", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "F", (420, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.putText(frame, "G", (520, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
+    frame = cv2.rectangle(frame, (80,1), (160,80), (122,122,122), -1)
+    frame = cv2.rectangle(frame, (175,1), (255,80), colors[0], -1)
+    frame = cv2.rectangle(frame, (270,1), (350,80), colors[1], -1)
+    frame = cv2.rectangle(frame, (365,1), (445,80), colors[2], -1)
+    frame = cv2.rectangle(frame, (460,1), (540,80), colors[3], -1)
 
+    frame = cv2.rectangle(frame, (1,80), (80,160), colors[3], -1)
+    frame = cv2.rectangle(frame, (1,175), (80,255), colors[2], -1)
+    frame = cv2.rectangle(frame, (1,270), (80,350), colors[1], -1)
+    frame = cv2.rectangle(frame, (1,365), (80,445), colors[0], -1)
+
+
+
+    cv2.putText(frame, "Pat.1", (96, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.2", (190, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.3", (290, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.4", (380, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "Pat.5", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
+    
+    cv2.putText(frame, "TRACK 1", (8, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2, cv2.LINE_AA)
+    cv2.putText(frame, "TRACK 2", (8, 210), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "TRACK 3", (8, 305), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "TRACK 4", (8, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+    
     # Identifying the pointer by making its mask
     Mask = cv2.inRange(hsv, Lower_hsv, Upper_hsv)
     Mask = cv2.erode(Mask, kernel, iterations=1)
@@ -90,7 +112,6 @@ while True:
     cnts,_ = cv2.findContours(Mask.copy(), cv2.RETR_EXTERNAL,
     	cv2.CHAIN_APPROX_SIMPLE)
     center = None
-
     # If the contours are formed
     if len(cnts) > 0:
     	# sorting the contours to find biggest
@@ -104,24 +125,38 @@ while True:
         center = (int(M['m10'] / M['m00']), int(M['m01'] / M['m00']))
 
         # Now checking if the user wants to click on any button above the screen
-        if center[1] <= 65:
-            if 40 <= center[0] <= 140: # Clear Button
+        if center[0] <= 80:
+            if 80 <= center[0] <= 160:
+                track=80
+
+            elif 175 <= center[0] <= 255:
+                track=70
+
+            elif 270 <= center[0] <= 350:
+                track=60
+
+            elif 365 <= center[0] <= 445:
+                track=50
+
+        if center[1] <= 80:
+
+            if 80 <= center[0] <= 160: # Clear Button
 
                 if(len(d)==0):
                     t.join()
                     d.append(track+1)
 
-            elif 160 <= center[0] <= 255:
+            elif 175 <= center[0] <= 255:
                     colorIndex = 0 # Blue
                     if(len(d)==0):
                         t.join()
                         d.append(track+2)
-            elif 275 <= center[0] <= 370:
+            elif 270 <= center[0] <= 350:
                     colorIndex = 1 # Green
                     if(len(d)==0):
                         t.join()
                         d.append(track+3)
-            elif 390 <= center[0] <= 485:
+            elif 460 <= center[0] <= 540:
 
                     if(len(d)==0):
                         t.join()
@@ -131,12 +166,16 @@ while True:
                     if(len(d)==0):
                         t.join()
                         d.append(track+9)
-
+#RESIZE
+    frame_rs=rescaleframe(frame)
 
 
     # Show all the windows
     cv2.imshow("Tracking", frame)
+    cv2.imshow("resize",frame_rs)
     cv2.imshow("mask",Mask)
+
+    
 
 	# If the 'q' key is pressed then stop the application
     if cv2.waitKey(1) & 0xFF == ord("q"):
@@ -145,3 +184,4 @@ while True:
 # Release the camera and all resources
 cap.release()
 cv2.destroyAllWindows()
+
