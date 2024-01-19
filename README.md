@@ -2,6 +2,7 @@
 ## Index:
 - Introduction
 - System Requirements
+- Setup Process
 - How the program operates
 - Understanding the code
 ## Introduction
@@ -11,6 +12,14 @@ instruments *(drum,synth,bass)* **Live** with a mere swing of his hand. It can b
 - [rtmidi module](https://pypi.org/project/python-rtmidi/)
 - FL studio or any other DAW
 - [loopMidi software](https://www.tobias-erichsen.de/software/loopmidi.html)
+## Setup Process:
+- Install required libraries
+  Make sure you have the neccessary libraries installed. You can check the [required files](requirements.txt) for downloading the required libaries.
+- Install LoopMidi
+  Install a virtual MIDI driver like "loopMIDI" to create a virtual MIDI port. Set up a virtual MIDI port using the loopMIDI software, and make sure it is running.
+- Setup loopMIDI device inside FL Studio
+  Configure the FL studio, Go to the `options` menu and select `MIDI settings`.
+  In the MIDI Settings window, under the `Output` section, make sure that your virtual MIDI port is enabled. If it's not in the list, click on `Refresh device list` or restart FL Studio after creating the virtual port in loopMIDI.
 ## How the program operates:
 The program creates 5X5 virtual tiles on the top and left edges of the live webcam footage screen. 
 Trackbars are used to mask and focus down an object (visible to the program through camera),
