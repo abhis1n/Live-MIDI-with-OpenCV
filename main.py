@@ -9,11 +9,11 @@ import json
 f = open('object.json')
 data = json.load(f)
 obj = data["highlighter"]
-
+      
 midiout = rtmidi.MidiOut()
 
 # Port 1 for loopMIDI
-midiout.open_port(1)
+midiout.open_port(0)
 
 #default called trackbar function
 def setValues(x):
@@ -49,6 +49,7 @@ pat2 = grey
 pat3 = grey
 pat4 = grey
 pat5 = grey
+pat6 = grey
 
 
 track1 = grey
@@ -92,6 +93,7 @@ while True:
     frame = cv2.rectangle(frame, (270,1), (350,80), pat3, -1)
     frame = cv2.rectangle(frame, (365,1), (445,80), pat4, -1)
     frame = cv2.rectangle(frame, (460,1), (540,80), pat5, -1)
+    frame = cv2.rectangle(frame, (555,1), (635,80), pat5, -1)
 
     # Tracks
     frame = cv2.rectangle(frame, (1,80), (80,160), track1, -1)
@@ -106,6 +108,7 @@ while True:
     cv2.putText(frame, "Pat.3", (290, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "Pat.4", (380, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "MUTE", (480, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, "MUTE ALL", (580, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
     cv2.putText(frame, "TRACK 1", (8, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "TRACK 2", (8, 210), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
@@ -173,6 +176,7 @@ while True:
                     d.append(track+1)
                     pat1=green
                     pat2=grey
+                    pat6=grey
                     pat3=grey
                     pat4=grey
                     pat5=grey
@@ -185,6 +189,7 @@ while True:
                     pat2=green
                     pat1=grey
                     pat3=grey
+                    pat6=grey
                     pat4=grey
                     pat5=grey
             elif 270 <= center[0] <= 350:
@@ -195,6 +200,7 @@ while True:
                     pat2=grey
                     pat1=grey
                     pat4=grey
+                    pat6=grey
                     pat5=grey
             elif 365 <= center[0] <= 445:
 
@@ -206,6 +212,7 @@ while True:
                     pat3=grey
                     pat1=grey
                     pat5=grey
+                    pat6=grey
             elif 460 <= center[0] <= 540:
                 if(len(d)==0):
                     t.join()
@@ -215,6 +222,21 @@ while True:
                     pat3=grey
                     pat4=grey
                     pat1=grey
+                    pat6=grey
+            elif 555 <= center[0] <= 635:
+                if(len(d)==0):
+                    t.join()
+                    for x in range(4):
+                        d.append(track=59)
+                        d.append(track=89)
+                        d.append(track=79)
+                        d.append(track=69)
+                    pat6=(0,0,255)
+                    pat2=grey
+                    pat3=grey
+                    pat4=grey
+                    pat1=grey
+                    pat5=grey
 
 
     # Show all the windows
