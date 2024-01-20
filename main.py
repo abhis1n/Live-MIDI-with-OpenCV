@@ -9,11 +9,11 @@ import json
 f = open('object.json')
 data = json.load(f)
 obj = data["highlighter"]
-      
+
 midiout = rtmidi.MidiOut()
 
 # Port 1 for loopMIDI
-midiout.open_port(0)
+midiout.open_port(1)
 
 #default called trackbar function
 def setValues(x):
@@ -226,11 +226,10 @@ while True:
             elif 555 <= center[0] <= 635:
                 if(len(d)==0):
                     t.join()
-                    for x in range(4):
-                        d.append(track=59)
-                        d.append(track=89)
-                        d.append(track=79)
-                        d.append(track=69)
+                    d.append(59)
+                    d.append(69)
+                    d.append(79)
+                    d.append(89)
                     pat6=(0,0,255)
                     pat2=grey
                     pat3=grey
