@@ -1,7 +1,5 @@
 import numpy as np
 import cv2
-from collections import deque
-import threading
 import time
 import rtmidi
 import json
@@ -19,14 +17,25 @@ midiout.open_port(1)
 def setValues(x):
    print("")
 
+def setGreen(buttonArr, index, isMute = 0):
+    grey = (122,122,122)
+    green = (0, 255, 0)
+    red = (0, 0, 255)
+
+    for i in range(len(buttonArr)):
+        buttonArr[i] = grey
+
+    if isMute:
+        buttonArr[index] = red
+    else:
+        buttonArr[index] = green
+
 def playnote(note=60):
     note_on = [0x90, note, 112] # channel 1, middle C, velocity 112
     note_off = [0x80, note, 0]
     midiout.send_message(note_on)
-    time.sleep(0.1)
+    time.sleep(0.001)
     midiout.send_message(note_off)
-    time.sleep(0.1)
-
 
 # Creating the trackbars needed for adjusting the marker colour
 cv2.namedWindow("Color detectors")
@@ -40,34 +49,20 @@ cv2.createTrackbar("Lower Value", "Color detectors", obj[5], 255,setValues)
 #The kernel to be used for dilation purpose
 kernel = np.ones((5,5),np.uint8)
 
-# colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
 grey = (122,122,122)
 green = (0, 255, 0)
+red = (0, 0, 255)
 
-pat1 = grey
-pat2 = grey
-pat3 = grey
-pat4 = grey
-pat5 = grey
-
-
-track1 = grey
-track2 = grey
-track3 = grey
-track4 = grey
+hasPlayed = False
+patColor = [grey] * 5
+trkColor = [grey] * 4
 
 # Loading the default webcam of PC.
 cap = cv2.VideoCapture(0)
-d = deque([48])
 track = 80
 
 # Keep looping
 while True:
-
-    if(len(d)!=0):
-        t = threading.Thread(target=playnote, args=(d.popleft(),))
-        t.start()
-
     # Reading the frame from the camera
     ret, frame = cap.read()
     #Flipping the frame to see same side of yours
@@ -87,20 +82,19 @@ while True:
 
     # Adding the colour buttons to the live frame for colour access
     # Patterns
-    frame = cv2.rectangle(frame, (80,1), (160,80), pat1, -1)
-    frame = cv2.rectangle(frame, (175,1), (255,80), pat2, -1)
-    frame = cv2.rectangle(frame, (270,1), (350,80), pat3, -1)
-    frame = cv2.rectangle(frame, (365,1), (445,80), pat4, -1)
-    frame = cv2.rectangle(frame, (460,1), (540,80), pat5, -1)
+    frame = cv2.rectangle(frame, (80,1), (160,80), patColor[0], -1)
+    frame = cv2.rectangle(frame, (175,1), (255,80), patColor[1], -1)
+    frame = cv2.rectangle(frame, (270,1), (350,80), patColor[2], -1)
+    frame = cv2.rectangle(frame, (365,1), (445,80), patColor[3], -1)
+    frame = cv2.rectangle(frame, (460,1), (540,80), patColor[4], -1)
 
     # Tracks
-    frame = cv2.rectangle(frame, (1,80), (80,160), track1, -1)
-    frame = cv2.rectangle(frame, (1,175), (80,255), track2, -1)
-    frame = cv2.rectangle(frame, (1,270), (80,350), track3, -1)
-    frame = cv2.rectangle(frame, (1,365), (80,445), track4, -1)
+    frame = cv2.rectangle(frame, (1,80), (80,160), trkColor[0], -1)
+    frame = cv2.rectangle(frame, (1,175), (80,255), trkColor[1], -1)
+    frame = cv2.rectangle(frame, (1,270), (80,350), trkColor[2], -1)
+    frame = cv2.rectangle(frame, (1,365), (80,445), trkColor[3], -1)
 
-
-
+    # Button Text
     cv2.putText(frame, "Pat.1", (96, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "Pat.2", (190, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
     cv2.putText(frame, "Pat.3", (290, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
@@ -139,89 +133,56 @@ while True:
         if center[0] <= 80:
             if 80 <= center[1] <= 160:
                 track=80
-                track1 = green
-                track2 = grey
-                track3 = grey
-                track4 = grey
+                setGreen(trkColor, 0)
 
             elif 175 <= center[1] <= 255:
                 track=70
-                track2 = green
-                track1 = grey
-                track3 = grey
-                track4 = grey
+                setGreen(trkColor, 1)
 
             elif 270 <= center[1] <= 350:
                 track=60
-                track3 = green
-                track2 = grey
-                track1 = grey
-                track4 = grey
+                setGreen(trkColor, 2)
 
             elif 365 <= center[1] <= 445:
                 track=50
-                track4 = green
-                track2 = grey
-                track3 = grey
-                track1 = grey
+                setGreen(trkColor, 3)
 
-        if center[1] <= 80:
-
+        elif center[1] <= 80:
             if 80 <= center[0] <= 160:
-                if(len(d)==0):
-                    t.join()
-                    d.append(track+1)
-                    pat1=green
-                    pat2=grey
-                    pat3=grey
-                    pat4=grey
-                    pat5=grey
-
+                setGreen(patColor, 0)
+                if not hasPlayed:
+                    hasPlayed = 1
+                    playnote(track+1)
 
             elif 175 <= center[0] <= 255:
-                if(len(d)==0):
-                    t.join()
-                    d.append(track+2)
-                    pat2=green
-                    pat1=grey
-                    pat3=grey
-                    pat4=grey
-                    pat5=grey
+                setGreen(patColor, 1)
+                if not hasPlayed:
+                    hasPlayed = 1
+                    playnote(track+2)
+
             elif 270 <= center[0] <= 350:
-                if(len(d)==0):
-                    t.join()
-                    d.append(track+3)
-                    pat3=green
-                    pat2=grey
-                    pat1=grey
-                    pat4=grey
-                    pat5=grey
+                setGreen(patColor, 2)
+                if not hasPlayed:
+                    hasPlayed = 1
+                    playnote(track+3)
+
             elif 365 <= center[0] <= 445:
+                setGreen(patColor, 3)
+                if not hasPlayed:
+                    hasPlayed = 1
+                    playnote(track+4)
 
-                if(len(d)==0):
-                    t.join()
-                    d.append(track+4)
-                    pat4=green
-                    pat2=grey
-                    pat3=grey
-                    pat1=grey
-                    pat5=grey
             elif 460 <= center[0] <= 540:
-                if(len(d)==0):
-                    t.join()
-                    d.append(track+9)
-                    pat5=(0,0,255)
-                    pat2=grey
-                    pat3=grey
-                    pat4=grey
-                    pat1=grey
-
+                setGreen(patColor, 4, 1)
+                if not hasPlayed:
+                    hasPlayed = 1
+                    playnote(track+9)
+        else:
+            hasPlayed = 0
 
     # Show all the windows
     cv2.imshow("Tracking", frame)
     cv2.imshow("mask",Mask)
-
-
 
 	# If the 'q' key is pressed then stop the application
     if cv2.waitKey(1) & 0xFF == ord("q"):
